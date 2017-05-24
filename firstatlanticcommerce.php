@@ -67,7 +67,7 @@ class FirstAtlanticCommerce extends PaymentModule
     {
         $this->name = 'firstatlanticcommerce';
         $this->tab = 'payments_gateways';
-        $this->version = '0.7.1';
+        $this->version = '0.7.2';
         $this->author = 'thirty bees';
         $this->need_instance = 1;
 
