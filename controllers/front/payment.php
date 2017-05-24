@@ -68,7 +68,7 @@ class FirstAtlanticCommercePaymentModuleFrontController extends ModuleFrontContr
         // Acquirer is always this
         $acquirerId = '464748';
         // Must be Unique per order. Put your own format here
-        $orderNumber = 'tb_fac_'.$this->context->cart->id;
+        $orderNumber = 'tb_fac_'.substr(Tools::str2url($this->context->shop->domain_ssl), 0, 50).'_'.$this->context->shop->id.'_'.$this->context->cart->id.'_'.time();
         // THESE next variables COME FROM THE PREVIOUS PAGE (hence $_POST) but you could drive these from
         // any source such as config files, server cache etc.
         // Passed in as a decimal but 12 chars is required
@@ -110,6 +110,7 @@ class FirstAtlanticCommercePaymentModuleFrontController extends ModuleFrontContr
                     'Signature'        => $signature,
                     'SignatureMethod'  => 'SHA1',
                     'TransactionCode'  => $transCode,
+                    'CustomData'       => json_encode(['cart_amount' => $this->context->cart->getOrderTotal()]),
                 ],
                 'CardHolderResponseURL' => $this->context->link->getModuleLink($this->module->name, 'confirmation', [], true),
             ],

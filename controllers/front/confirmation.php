@@ -80,10 +80,6 @@ class FirstAtlanticCommerceConfirmationModuleFrontController extends ModuleFront
         $cart = $this->context->cart;
         $customer = new Customer((int) $cart->id_customer);
         $currency = new Currency((int) $cart->id_currency);
-        $shouldBeAmount = $cart->getOrderTotal();
-        if (!in_array(Tools::strtolower($currency->iso_code), FirstAtlanticCommerce::$zeroDecimalCurrencies)) {
-            $shouldBeAmount = (int) ($shouldBeAmount * 100);
-        }
 
         if (Configuration::get(FirstAtlanticCommerce::GO_LIVE)) {
             $host = 'marlin.firstatlanticcommerce.com';
@@ -266,10 +262,10 @@ class FirstAtlanticCommerceConfirmationModuleFrontController extends ModuleFront
             return false;
         }
 
-        $actualAmount = (int) $result->HostedPageResultsResult->AuthResponse;
-        if (!in_array(Tools::strtolower($currency->iso_code), FirstAtlanticCommerce::$zeroDecimalCurrencies)) {
-            $actualAmount = (float) $actualAmount / 100;
-        }
+        $actualAmount = json_decode($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults);
+        $actualAmount = (float) $actualAmount['cart_amount'];
+
+        $shouldBeAmount = (float) $this->context->cart->getOrderTotal();
 
         if ($actualAmount !== $shouldBeAmount) {
             /**
