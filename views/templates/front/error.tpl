@@ -27,7 +27,7 @@
     </span>
 {/capture}
 <div>
-	<h3>{l s='An error occurred' mod='stripe'}:</h3>
+	<h3>{l s='An error occurred' mod='firstatlanticcommerce'}:</h3>
 	<ul class="alert alert-danger">
 		{foreach from=$errors item='error'}
 			<li>{$error|escape:'htmlall':'UTF-8'}</li>
@@ -35,5 +35,5 @@
 	</ul>
 </div>
 <ul class="footer_links clearfix">
-	<li><a class="btn btn-default button button-small" href="{$orderLink|escape:'html':'UTF-8'}" title="{l s='Back to your shopping cart' mod='stripe'}"><span><i class="icon-chevron-left"></i> {l s='Back to your shopping cart' mod='stripe'}</span></a></li>
+	<li><a class="btn btn-default button button-small" href="{$orderLink|escape:'html':'UTF-8'}" title="{l s='Back to your shopping cart' mod='firstatlanticcommerce'}"><span><i class="icon-chevron-left"></i> {l s='Back to your shopping cart' mod='firstatlanticcommerce'}</span></a></li>
 </ul>

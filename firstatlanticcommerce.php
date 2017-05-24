@@ -61,7 +61,7 @@ class FirstAtlanticCommerce extends PaymentModule
     public $menu;
 
     /**
-     * ThirtybeesStripe constructor.
+     * FirstAtlanticCommerce constructor.
      *
      * @since 1.0.0
      */

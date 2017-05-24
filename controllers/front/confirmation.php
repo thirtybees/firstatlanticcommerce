@@ -279,7 +279,7 @@ class FirstAtlanticCommerceConfirmationModuleFrontController extends ModuleFront
             $this->errors[] = $error;
             $this->setTemplate('error.tpl');
 
-            Logger::addLog("{$this->module->name} - Error while processing cart {$cart->id}: Actual amount mismatch", 3);
+            Logger::addLog("{$this->module->name} - Error while processing cart {$cart->id}: Actual amount mismatch - Cart amount: $shouldBeAmount - Actual amount: $actualAmount", 3);
         }
 
         /**
@@ -287,7 +287,7 @@ class FirstAtlanticCommerceConfirmationModuleFrontController extends ModuleFront
          */
         $idCurrency = (int) $currency->id;
 
-        if ($this->module->validateOrder($cart->id, (int) Configuration::get(FirstAtlanticCommerce::STATUS_VALIDATED), $cart->getOrderTotal(), 'Stripe', null, [], $idCurrency, false, $cart->secure_key)) {
+        if ($this->module->validateOrder($cart->id, (int) Configuration::get(FirstAtlanticCommerce::STATUS_VALIDATED), $cart->getOrderTotal(), 'Credit Card', null, [], $idCurrency, false, $cart->secure_key)) {
             /**
              * If the order has been validated we try to retrieve it
              */
