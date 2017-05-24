@@ -131,20 +131,24 @@ class FirstAtlanticCommerceConfirmationModuleFrontController extends ModuleFront
         if ($responseCode === static::RESPONSE_CODE_DECLINED) {
             switch ($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ReasonCode) {
                 case 35:
-                    $this->errors[] = $this->module->l('Unable to process your request. Please try again later.', 'confirmation');
+                    $error = $this->module->l('Unable to process your request. Please try again later.', 'confirmation');
+                    Logger::addLog("{$this->module->name} - Error while processing cart {$cart->id}: 35 - $error");
                     break;
                 case 38:
-                    $this->errors[] = $this->module->l('Transaction processing terminated. Please try again later.');
+                    $error = $this->module->l('Transaction processing terminated. Please try again later.');
+                    Logger::addLog("{$this->module->name} - Error while processing cart {$cart->id}: 38 - $error");
                     break;
                 case 39:
-                    $this->errors[] = $this->module->l('Issuer or switch not available. Please try again later.');
+                    $error = $this->module->l('Issuer or switch not available. Please try again later.');
+                    Logger::addLog("{$this->module->name} - Error while processing cart {$cart->id}: 39 - $error");
                     break;
                 default:
-                    $this->errors[] = $this->module->l('Transaction is declined.');
+                    $error = $this->module->l('Transaction is declined.');
+                    Logger::addLog("{$this->module->name} - Error while processing cart {$cart->id}: $error");
                     break;
-
             }
 
+            $this->errors[] = $error;
             $this->setTemplate('error.tpl');
 
             return false;
