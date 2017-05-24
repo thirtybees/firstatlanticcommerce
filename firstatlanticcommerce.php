@@ -17,9 +17,13 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+use FirstAtlanticCommerceModule\FACTransaction;
+
 if (!defined('_TB_VERSION_')) {
     exit;
 }
+
+require_once __DIR__.'/classes/autoload.php';
 
 /**
  * Class FirstAtlanticCommerce
@@ -101,6 +105,8 @@ class FirstAtlanticCommerce extends PaymentModule
 
             return false;
         }
+
+        FACTransaction::createDatabase();
 
         foreach ($this->hooks as $hook) {
             $this->registerHook($hook);
@@ -579,9 +585,20 @@ class FirstAtlanticCommerce extends PaymentModule
      * @throws Exception
      * @throws SmartyException
      */
-    public function hookDisplayAdminOrder()
+    public function hookDisplayAdminOrder($params)
     {
-        return '';
+        if (!isset($params['id_order'])) {
+            return '';
+        }
+
+        $transaction = FACTransaction::getByIdOrder((int) $params['id_order']);
+        if (!Validate::isLoadedObject($transaction)) {
+            return '';
+        }
+
+        $this->context->smarty->assign('transaction', $transaction);
+
+        return $this->display(__FILE__, 'views/templates/admin/adminorder.tpl');
     }
 
     /**

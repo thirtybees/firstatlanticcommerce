@@ -17,6 +17,8 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+use FirstAtlanticCommerceModule\FACTransaction;
+
 if (!defined('_TB_VERSION_')) {
     exit;
 }
@@ -287,7 +289,29 @@ class FirstAtlanticCommerceConfirmationModuleFrontController extends ModuleFront
             /**
              * If the order has been validated we try to retrieve it
              */
-            $idOrder = Order::getOrderByCartId((int) $cart->id);
+            $idOrder = (int) Order::getOrderByCartId((int) $cart->id);
+
+            try {
+                $transaction = new FACTransaction();
+                $transaction->id_order = $idOrder;
+                $transaction->reference = isset($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ReferenceNumber) ? $result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ReferenceNumber : '';
+                $transaction->response_code = isset($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ResponseCode) ? (int) $result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ResponseCode : 0;
+                $transaction->reason_code = isset($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ReasonCode) ? (int) $result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ReasonCode : 0;
+                $transaction->reason_desc = isset($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ReasonCodeDescription) ? $result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->ReasonCodeDescription : '';
+                $transaction->card_number = isset($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->PaddedCardNumber) ? $result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->PaddedCardNumber : '';
+                $transaction->cvv_result = isset($result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->CVV2Result) ? $result->HostedPageResultsResult->AuthResponse->CreditCardTransactionResults->CVV2Result : '';
+                $transaction->merchant_id = isset($result->HostedPageResultsResult->AuthResponse->MerchantId) ? $result->HostedPageResultsResult->AuthResponse->MerchantId : '';
+                $transaction->order_number = isset($result->HostedPageResultsResult->AuthResponse->OrderNumber) ? $result->HostedPageResultsResult->AuthResponse->OrderNumber : '';
+                $transaction->purchase_amount = isset($result->HostedPageResultsResult->PurchaseAmount) ? (int) $result->HostedPageResultsResult->PurchaseAmount : -1;
+                $transaction->fraud_control_id = isset($result->HostedPageResultsResult->AuthResponse->FraudControlResults->FraudControlId) ? $result->HostedPageResultsResult->AuthResponse->FraudControlResults->FraudControlId : '';
+                $transaction->fraud_response_code = isset($result->HostedPageResultsResult->AuthResponse->FraudControlResults->FraudResponseCode) ? $result->HostedPageResultsResult->AuthResponse->FraudControlResults->FraudResponseCode : '';
+                $transaction->fraud_reason_code = isset($result->HostedPageResultsResult->AuthResponse->FraudControlResults->ReasonCode) ? $result->HostedPageResultsResult->AuthResponse->FraudControlResults->ReasonCode : '';
+                $transaction->fraud_reason_desc = isset($result->HostedPageResultsResult->AuthResponse->FraudControlResults->ReasonCodeDesc) ? $result->HostedPageResultsResult->AuthResponse->FraudControlResults->ReasonCodeDesc : '';
+                $transaction->fraud_score = isset($result->HostedPageResultsResult->AuthResponse->FraudControlResults->Score) ? $result->HostedPageResultsResult->AuthResponse->FraudControlResults->Score : '';
+
+                $transaction->add();
+            } catch (Exception $e) {
+            }
 
             /**
              * The order has been placed so we redirect the customer on the confirmation page.
