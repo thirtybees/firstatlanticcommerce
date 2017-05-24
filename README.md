@@ -1,5 +1,5 @@
 # First Atlantic Commerce
-![First Atlantic Commerce](/logo.png)
+![First Atlantic Commerce](views/img/logo_fac.png)
 
 Accept Payments with First Atlantic Commerce in thirty bees.
 
