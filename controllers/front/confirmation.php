@@ -101,7 +101,7 @@ class FirstAtlanticCommerceConfirmationModuleFrontController extends ModuleFront
             'soap_version' => SOAP_1_1,
             'exceptions'   => 0,
             'trace'        => 1,
-            'cache_wsdl'   => WSDL_CACHE_NONE,
+            'cache_wsdl'   => _PS_MODE_DEV_ ? WSDL_CACHE_NONE : WSDL_CACHE_BOTH,
         ];
         // WSDL Based calls use a proxy, so this is the best way
         // to call FAC PG Operations as it creates the methods for you
