@@ -9,7 +9,7 @@ The aim of this module is to make accepting payments with First Atlantic Commerc
 Contributions are more than welcome!
 
 ### Current features
-- FAC Hosted Pages
+- Credit Cards via Hosted Pages
 
 ### Roadmap
 The issues page will give you a good overview of the current roadmap and priorities:
@@ -28,10 +28,11 @@ The wiki can be found here: https://github.com/thirtybees/firstatlanticcommerce/
 ## Minimum requirements
 - thirty bees `>= 1.0.0`
 - PHP `>= 5.5.0`
-- `TLSv1.2` connectivity (`cURL` or `fsockopen`)
+- `TLSv1.2` connectivity (`cURL` only)
+- PHP `soap` extension
 
 ### Compatibility
-- thirty bees `1.0.0+`
+- thirty bees `1.0.1+`
 
 ## License
 Academic Free License 3.0
