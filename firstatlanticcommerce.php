@@ -45,6 +45,8 @@ class FirstAtlanticCommerce extends PaymentModule
     const MERCHANT_ID_TEST = 'FAC_MERCHANT_ID_TEST';
     const MERCHANT_PASSWORD_TEST = 'FAC_MERCHANT_PASSWORD_TEST';
 
+    const THREEDSECURE = 'FAC_THREEDSECURE';
+
     /** @var array Supported zero-decimal currencies */
     public static $zeroDecimalCurrencies = ['bif', 'clp', 'djf', 'gnf', 'jpy', 'kmf', 'krw', 'mga', 'pyg', 'rwf', 'vdn', 'vuv', 'xaf', 'xof', 'xpf'];
     /** @var string $baseUrl Module base URL */
@@ -71,7 +73,7 @@ class FirstAtlanticCommerce extends PaymentModule
     {
         $this->name = 'firstatlanticcommerce';
         $this->tab = 'payments_gateways';
-        $this->version = '0.8.2';
+        $this->version = '1.0.0';
         $this->author = 'thirty bees';
         $this->need_instance = 1;
 
@@ -192,6 +194,8 @@ class FirstAtlanticCommerce extends PaymentModule
 
         $goLive = (bool) Tools::getValue(static::GO_LIVE);
 
+        $threeDSecure = (bool) Tools::getValue(static::THREEDSECURE);
+
         if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')) {
             if (Shop::getContext() == Shop::CONTEXT_ALL) {
                 $this->updateAllValue(static::STATUS_VALIDATED, $statusValidated);
@@ -204,6 +208,7 @@ class FirstAtlanticCommerce extends PaymentModule
                 $this->updateAllValue(static::PAGE_SET_NAME_TEST, $pageSetNameTest);
                 $this->updateAllValue(static::PAGE_NAME_TEST, $pageNameTest);
                 $this->updateAllValue(static::GO_LIVE, $goLive);
+                $this->updateAllValue(static::THREEDSECURE, $threeDSecure);
             } elseif (is_array(Tools::getValue('multishopOverrideOption'))) {
                 $idShopGroup = (int) Shop::getGroupFromShop($this->getShopId(), true);
                 $multishopOverride = Tools::getValue('multishopOverrideOption');
@@ -239,6 +244,9 @@ class FirstAtlanticCommerce extends PaymentModule
                         if (isset($multishopOverride[static::GO_LIVE]) && $multishopOverride[static::GO_LIVE]) {
                             Configuration::updateValue(static::GO_LIVE, $goLive, false, $idShopGroup, $idShop);
                         }
+                        if (isset($multishopOverride[static::THREEDSECURE]) && $multishopOverride[static::THREEDSECURE]) {
+                            Configuration::updateValue(static::THREEDSECURE, $threeDSecure, false, $idShopGroup, $idShop);
+                        }
                     }
                 } else {
                     $idShop = (int) $this->getShopId();
@@ -272,6 +280,9 @@ class FirstAtlanticCommerce extends PaymentModule
                     if (isset($multishopOverride[static::GO_LIVE]) && $multishopOverride[static::GO_LIVE]) {
                         Configuration::updateValue(static::GO_LIVE, $goLive, false, $idShopGroup, $idShop);
                     }
+                    if (isset($multishopOverride[static::THREEDSECURE]) && $multishopOverride[static::THREEDSECURE]) {
+                        Configuration::updateValue(static::THREEDSECURE, $threeDSecure, false, $idShopGroup, $idShop);
+                    }
                 }
             }
         }
@@ -286,6 +297,7 @@ class FirstAtlanticCommerce extends PaymentModule
         Configuration::updateValue(static::PAGE_SET_NAME_TEST, $pageSetNameTest);
         Configuration::updateValue(static::PAGE_NAME_TEST, $pageNameTest);
         Configuration::updateValue(static::GO_LIVE, $goLive);
+        Configuration::updateValue(static::THREEDSECURE, $threeDSecure);
     }
 
     /**
@@ -472,6 +484,14 @@ class FirstAtlanticCommerce extends PaymentModule
                         'validation' => 'isString',
                         'cast'       => 'strval',
                         'size'       => 64,
+                    ],
+                    static::THREEDSECURE       => [
+                        'title'      => $this->l('Enforce 3D Secure'),
+                        'type'       => 'bool',
+                        'name'       => static::THREEDSECURE,
+                        'value'      => Configuration::get(static::THREEDSECURE),
+                        'validation' => 'isBool',
+                        'cast'       => 'intval',
                     ],
                     static::STATUS_VALIDATED       => [
                         'title'      => $this->l('Payment accepted status'),

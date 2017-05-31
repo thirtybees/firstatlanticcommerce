@@ -83,7 +83,7 @@ class FirstAtlanticCommercePaymentModuleFrontController extends ModuleFrontContr
         // Page Name
         $pagename = $live ? Configuration::get(FirstAtlanticCommerce::PAGE_NAME_LIVE) : Configuration::get(FirstAtlanticCommerce::PAGE_NAME_TEST);
         // TransCode
-        $transCode = 0;
+        $transCode = Configuration::get(FirstAtlanticCommerce::THREEDSECURE) ? 64 : 256;
         // Formatted Amount. Must be in twelve charecter, no decimal place, zero padded format
         $amountFormatted = str_pad(''.$facAmount, 12, "0", STR_PAD_LEFT);
         // 840 = USD, put your currency code here
